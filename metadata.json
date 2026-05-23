@@ -1,0 +1,5 @@
+{
+  "name": "DriveAway",
+  "description": "Premium car rental platform with Next.js and FastAPI",
+  "requestFramePermissions": []
+}

@@ -1,0 +1,16 @@
+services:
+  backend:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://neondb_owner:npg_Do4M2nuFXrhx@ep-lucky-star-al5bk8tj-pooler.c-3.eu-central-1.aws.neon.tech/neondb?sslmode=require
+      SECRET_KEY: your-secret-key-here
+      FRONTEND_URL: http://localhost:3000
+      SMTP_HOST: smtp.gmail.com
+      SMTP_PORT: 587
+      SMTP_USER: your-email@gmail.com
+      SMTP_PASS: your-app-password
+    volumes:
+      - ./app:/app/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload

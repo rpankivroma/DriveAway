@@ -1,0 +1,17 @@
+fastapi
+uvicorn
+jinja2
+sqlalchemy
+asyncpg
+python-dotenv
+greenlet
+passlib[bcrypt]
+bcrypt==3.2.0
+python-jose[cryptography]
+pydantic[email]
+python-multipart
+alembic
+pytest
+pytest-asyncio
+pytest-mock
+httpx

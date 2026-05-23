@@ -1,0 +1,34 @@
+{
+  "name": "driveaway-nextjs",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "lint": "echo \"Linting skipped\""
+  },
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.2.1",
+    "@types/d3": "^7.4.3",
+    "clsx": "latest",
+    "concurrently": "^9.2.1",
+    "d3": "^7.9.0",
+    "framer-motion": "latest",
+    "lucide-react": "latest",
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "recharts": "^3.7.0",
+    "tailwind-merge": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "autoprefixer": "latest",
+    "postcss": "latest",
+    "tailwindcss": "latest",
+    "typescript": "latest"
+  }
+}
