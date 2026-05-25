@@ -1,5 +1,6 @@
 {
   "name": "DriveAway",
   "description": "Premium car rental platform with Next.js and FastAPI",
-  "requestFramePermissions": []
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
