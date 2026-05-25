@@ -2,7 +2,7 @@ fastapi
 uvicorn
 jinja2
 sqlalchemy
-asyncpg
+asyncpg>=0.29.0
 python-dotenv
 greenlet
 passlib[bcrypt]
@@ -15,3 +15,4 @@ pytest
 pytest-asyncio
 pytest-mock
 httpx
+pydantic-settings

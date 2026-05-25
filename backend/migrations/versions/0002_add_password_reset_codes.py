@@ -25,10 +25,7 @@ def upgrade() -> None:
         sa.Column('expires_at', sa.DateTime(), nullable=False),
         sa.Column('is_used', sa.SmallInteger(), nullable=False, server_default='0'),
         sa.Column('created_at', sa.TIMESTAMP(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
-        sa.PrimaryKeyConstraint('id'),
-        mysql_charset='utf8mb4',
-        mysql_collate='utf8mb4_general_ci',
-        mysql_engine='InnoDB'
+        sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_password_reset_codes_email'), 'password_reset_codes', ['email'], unique=False)
     op.create_index(op.f('ix_password_reset_codes_id'), 'password_reset_codes', ['id'], unique=False)

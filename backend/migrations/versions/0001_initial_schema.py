@@ -33,12 +33,9 @@ def upgrade() -> None:
         sa.Column('card_number', sa.String(length=50), nullable=True),
         sa.Column('expires', sa.Date(), nullable=True),
         sa.Column('created_at', sa.TIMESTAMP(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
-        sa.Column('updated_at', sa.TIMESTAMP(), server_default=sa.text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'), nullable=False),
+        sa.Column('updated_at', sa.TIMESTAMP(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
         sa.PrimaryKeyConstraint('id'),
-        sa.UniqueConstraint('email'),
-        mysql_charset='utf8mb4',
-        mysql_collate='utf8mb4_general_ci',
-        mysql_engine='InnoDB'
+        sa.UniqueConstraint('email')
     )
     op.create_index(op.f('ix_users_email'), 'users', ['email'], unique=True)
     op.create_index(op.f('ix_users_id'), 'users', ['id'], unique=False)
@@ -62,12 +59,9 @@ def upgrade() -> None:
         sa.Column('price_per_day', sa.Numeric(precision=10, scale=2), nullable=False),
         sa.Column('status', sa.Enum('available', 'reserved', 'in_service', 'inactive', name='carstatusenum'), nullable=True, server_default='available'),
         sa.Column('created_at', sa.TIMESTAMP(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
-        sa.Column('updated_at', sa.TIMESTAMP(), server_default=sa.text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'), nullable=False),
+        sa.Column('updated_at', sa.TIMESTAMP(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
         sa.PrimaryKeyConstraint('id'),
-        sa.UniqueConstraint('license_plate'),
-        mysql_charset='utf8mb4',
-        mysql_collate='utf8mb4_general_ci',
-        mysql_engine='InnoDB'
+        sa.UniqueConstraint('license_plate')
     )
     op.create_index(op.f('ix_cars_id'), 'cars', ['id'], unique=False)
 
@@ -80,11 +74,8 @@ def upgrade() -> None:
         sa.Column('desc', sa.Text(), nullable=False),
         sa.Column('price', sa.Numeric(precision=10, scale=2), nullable=False, server_default='0.00'),
         sa.Column('created_at', sa.TIMESTAMP(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
-        sa.Column('updated_at', sa.TIMESTAMP(), server_default=sa.text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'), nullable=False),
-        sa.PrimaryKeyConstraint('id'),
-        mysql_charset='utf8mb4',
-        mysql_collate='utf8mb4_general_ci',
-        mysql_engine='InnoDB'
+        sa.Column('updated_at', sa.TIMESTAMP(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
+        sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_additional_services_id'), 'additional_services', ['id'], unique=False)
 
@@ -96,11 +87,8 @@ def upgrade() -> None:
         sa.Column('max_days', sa.Integer(), nullable=True),
         sa.Column('discount_percent', sa.Numeric(precision=5, scale=2), nullable=False),
         sa.Column('created_at', sa.TIMESTAMP(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
-        sa.Column('updated_at', sa.TIMESTAMP(), server_default=sa.text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'), nullable=False),
-        sa.PrimaryKeyConstraint('id'),
-        mysql_charset='utf8mb4',
-        mysql_collate='utf8mb4_general_ci',
-        mysql_engine='InnoDB'
+        sa.Column('updated_at', sa.TIMESTAMP(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
+        sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_available_discounts_id'), 'available_discounts', ['id'], unique=False)
 
@@ -117,13 +105,10 @@ def upgrade() -> None:
         sa.Column('additional_services', sa.Text(), nullable=True),
         sa.Column('status', sa.Enum('pending', 'confirmed', 'active', 'completed', 'cancelled', 'disputed', name='dealstatusenum'), nullable=True, server_default='pending'),
         sa.Column('created_at', sa.TIMESTAMP(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
-        sa.Column('updated_at', sa.TIMESTAMP(), server_default=sa.text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'), nullable=False),
+        sa.Column('updated_at', sa.TIMESTAMP(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
         sa.ForeignKeyConstraint(['car_id'], ['cars.id'], ),
         sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
-        sa.PrimaryKeyConstraint('id'),
-        mysql_charset='utf8mb4',
-        mysql_collate='utf8mb4_general_ci',
-        mysql_engine='InnoDB'
+        sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_deals_car_id'), 'deals', ['car_id'], unique=False)
     op.create_index(op.f('ix_deals_id'), 'deals', ['id'], unique=False)
