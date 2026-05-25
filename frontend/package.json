@@ -20,7 +20,9 @@
     "react": "latest",
     "react-dom": "latest",
     "recharts": "^3.7.0",
-    "tailwind-merge": "latest"
+    "sonner": "^2.0.7",
+    "tailwind-merge": "latest",
+    "zustand": "^5.0.13"
   },
   "devDependencies": {
     "@types/node": "latest",
