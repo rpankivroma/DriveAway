@@ -1,19 +1,75 @@
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-import os
+import httpx
 from app.core.config import settings
 
-# Note: SMTP settings could be added to core/config.py as well
-SMTP_HOST = os.getenv("SMTP_HOST", "smtp.gmail.com")
-SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
-SMTP_USER = os.getenv("SMTP_USER")
-SMTP_PASS = os.getenv("SMTP_PASS")
+def check_brevo_connection() -> bool:
+    api_key = settings.BREVO_API_KEY
+    if not api_key:
+        print("[BREVO SERVICE] BREVO_API_KEY is not configured. Cannot verify Brevo API connectivity.")
+        return False
+    
+    url = "https://api.brevo.com/v3/account"
+    headers = {
+        "api-key": api_key,
+        "accept": "application/json"
+    }
+    
+    try:
+        response = httpx.get(url, headers=headers, timeout=10.0)
+        if response.status_code == 200:
+            account_info = response.json()
+            company_name = account_info.get("companyName", "Unknown")
+            print(f"[BREVO SERVICE] Successfully connected to Brevo API. Registered Owner/Company: {company_name}")
+            return True
+        else:
+            print(f"[BREVO SERVICE] Connection check failed. Status: {response.status_code}, Response: {response.text}")
+            return False
+    except Exception as e:
+        print(f"[BREVO SERVICE] Connection check aborted due to exception: {e}")
+        return False
+
+def send_brevo_email(to_email: str, subject: str, html_content: str) -> bool:
+    api_key = settings.BREVO_API_KEY
+    if not api_key:
+        print("[BREVO SERVICE] BREVO_API_KEY is not configured. Skipping email send.")
+        return False
+    
+    url = "https://api.brevo.com/v3/smtp/email"
+    headers = {
+        "api-key": api_key,
+        "Content-Type": "application/json",
+        "accept": "application/json"
+    }
+    
+    payload = {
+        "sender": {
+            "name": settings.BREVO_SENDER_NAME,
+            "email": settings.BREVO_SENDER_EMAIL
+        },
+        "to": [
+            {
+                "email": to_email
+            }
+        ],
+        "subject": subject,
+        "htmlContent": html_content
+    }
+    
+    try:
+        response = httpx.post(url, json=payload, headers=headers, timeout=10.0)
+        if response.status_code in (200, 201, 202):
+            print(f"[BREVO SERVICE] Email successfully dispatched to {to_email}")
+            return True
+        else:
+            print(f"[BREVO SERVICE] Dispatch failed. Status: {response.status_code}, Response: {response.text}")
+            return False
+    except Exception as e:
+        print(f"[BREVO SERVICE] Exception during dispatch: {e}")
+        return False
 
 def send_reset_email(to_email: str, code: str):
-    if not SMTP_USER or not SMTP_PASS:
-        print("SMTP credentials not configured. Skipping email send.")
-        print(f"Code for {to_email}: {code}")
+    if not settings.BREVO_API_KEY:
+        print("[BREVO SERVICE] Brevo configuration missing. Skipping email send.")
+        print(f"Password reset code for {to_email}: {code}")
         return
 
     subject = "DriveAway - Password Reset Verification Code"
@@ -39,26 +95,12 @@ def send_reset_email(to_email: str, code: str):
         </body>
     </html>
     """
-
-    message = MIMEMultipart()
-    message["From"] = f"DriveAway <{SMTP_USER}>"
-    message["To"] = to_email
-    message["Subject"] = subject
-    message.attach(MIMEText(body, "html"))
-
-    try:
-        with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
-            server.starttls()
-            server.login(SMTP_USER, SMTP_PASS)
-            server.send_message(message)
-        print(f"Reset email sent to {to_email}")
-    except Exception as e:
-        print(f"Failed to send email: {e}")
+    send_brevo_email(to_email, subject, body)
 
 def send_verification_email(to_email: str, code: str):
-    if not SMTP_USER or not SMTP_PASS:
-        print("SMTP credentials not configured. Skipping email send.")
-        print(f"Verification code for {to_email}: {code}")
+    if not settings.BREVO_API_KEY:
+        print("[BREVO SERVICE] Brevo configuration missing. Skipping email send.")
+        print(f"Email verification code for {to_email}: {code}")
         return
 
     subject = "DriveAway - Email Verification Code"
@@ -84,18 +126,4 @@ def send_verification_email(to_email: str, code: str):
         </body>
     </html>
     """
-
-    message = MIMEMultipart()
-    message["From"] = f"DriveAway <{SMTP_USER}>"
-    message["To"] = to_email
-    message["Subject"] = subject
-    message.attach(MIMEText(body, "html"))
-
-    try:
-        with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
-            server.starttls()
-            server.login(SMTP_USER, SMTP_PASS)
-            server.send_message(message)
-        print(f"Verification email sent to {to_email}")
-    except Exception as e:
-        print(f"Failed to send email: {e}")
+    send_brevo_email(to_email, subject, body)

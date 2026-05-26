@@ -19,6 +19,11 @@ class Settings(BaseSettings):
     ALGORITHM: str = os.getenv("ALGORITHM", "HS256")
     ACCESS_TOKEN_EXPIRE_MINUTES: int = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30"))
 
+    # Brevo API Configurations
+    BREVO_API_KEY: str = os.getenv("BREVO_API_KEY", "")
+    BREVO_SENDER_EMAIL: str = os.getenv("BREVO_SENDER_EMAIL", "pankiv.roma@gmail.com")
+    BREVO_SENDER_NAME: str = os.getenv("BREVO_SENDER_NAME", "DriveAway")
+
     @property
     def DATABASE_URL(self) -> str:
         env_url = os.getenv("DATABASE_URL")

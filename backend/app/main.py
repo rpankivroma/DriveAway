@@ -22,6 +22,7 @@ from app.api.car_router import router as car_router
 from app.api.service_router import router as service_router
 from app.api.booking_router import router as booking_router
 from app.api.discount_router import router as discount_router
+from app.services.email_service import check_brevo_connection
 
 load_dotenv()
 
@@ -54,6 +55,12 @@ app.include_router(discount_router, prefix="/api/discounts")
 
 @app.on_event("startup")
 async def on_startup():
+    # Verify Brevo API key connection status
+    try:
+        check_brevo_connection()
+    except Exception as e:
+        print(f"[STARTUP] Brevo API status check failed: {e}")
+
     # Run migrations
     try:
         # For async engine, we might need a different approach if we want to use alembic directly
